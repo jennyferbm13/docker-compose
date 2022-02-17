@@ -9,4 +9,4 @@ services:
     command: "--default-authentication-plugin=mysyql_native_password"
     restart: "always"
     environment: 
-      MYSQL_ROOT_PASSWORD: "foku"
+      MYSQL_ROOT_PASSWORD: "goku"
