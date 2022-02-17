@@ -1,37 +1,52 @@
 
-
+import time
 import mysql.connector
 from flask import Flask
 
 app = Flask(__name__)
-db = mysql.connector.connect(host="mysql", user ="Pelusa", password="goku")
-cache=db.cursos()
-if len(cache.execute("SHOW TABLES")) == 0:
-  cache.execute("CREATE TABLE info (hits TINYINT(100))")
-  sql = "INSERT INTO info (hits) VALUES (%d)"
-  val =0
-  try:
-    cache.execute(sql,val)
-    db.commit()
-  except mysql.connector.Error as err:
-    print(err)
-    print("Error Code:", err.errno)
-    print("SQLSTATE", err.msg)
-    
+def getDB():
+  attempts=0
+  while True:
+    try:
+      return mysql.connector.connect(host="mysql", user ="root", password="goku", database="mydatabase") 
+    except mysql.connector.Error as err:
+     attempts +=1
+     print(err)
+     print("Error Code: ", err.errno)
+     print("SQLSTATE ", err.sqlstate)
+     print("Message: ", err.msg)
+     print("Attempt: ", attempts)
+     time.sleep(0.5)
 
+db = getDB()
+cache=db.cursos()
+cache.execute("SHOW DATABASES")
+rows=cache.fetchall()
+cache.execute("CREARE TABLE IF NOT EXISTS info (data VARCHAR(255) NOT NULL, value INT, UNIQUE (data))")
+SQL= "INSERT IGNORE INTO info (data,value) VALUES ('hits',0)"
+
+try:
+    cache.execute(sql)
+    db.commit()
+except mysql.connector.Error as err:
+     print(err)
+     print("Error Code: ", err.errno)
+     print("SQLSTATE ", err.sqlstate)
+     print("Message: ", err.msg)
+    
 def get_hit_count():
     retries = 5
-    while True:
-        cache.execute("SELECT * FROM info)
-        hits = cache.fetchone()+1
-        try:
-            cache.execute("UPDATE info SET hits=(%d)", hits)
-            db.commit()
-            return hits
-        except mysql.connector.Error as err:
+    try:
+      cache.execute("UPDATE info SET value = value+1)
+      db.commit()
+      return hits
+    except mysql.connector.Error as err:
             print(err)
             print("Error Code:", err.errno)
             print("SQLSTATE", err.msg)
+            print("Message: ", err.msg)
+            return -1
+        
 
 @app.route('/')
 def hello():
