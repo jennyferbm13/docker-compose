@@ -28,6 +28,8 @@ SQL= "INSERT IGNORE INTO info (data,value) VALUES ('hits',0)"
 try:
     cache.execute(sql)
     db.commit()
+    cache.execute("SELECT value FROM info WHERE data = 'hits'")
+    hits= cache.fetchone()[0]
 except mysql.connector.Error as err:
      print(err)
      print("Error Code: ", err.errno)
