@@ -4,5 +4,9 @@ services:
     build: .
     ports:
       - "8000:5000"
-  redis:
-    image: "redis:alpine"
+  mysql:
+    image: "mysql"
+    command: "--default-authentication-plugin=mysyql_native_password"
+    restart: "always"
+    environment: 
+      MYSQL_ROOT_PASSWORD: "foku"
