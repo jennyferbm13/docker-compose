@@ -39,7 +39,7 @@ except mysql.connector.Error as err:
 def get_hit_count():
     retries = 5
     try:
-      cache.execute("UPDATE info SET value = value+1)
+      cache.execute("UPDATE info SET value = value+1")
       db.commit()
       cache.execute("SELECT value FROM info WHERE data = 'hits'")
       hits = cache.fetchone()[0]
