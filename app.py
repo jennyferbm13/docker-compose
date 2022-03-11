@@ -19,7 +19,7 @@ def getDB():
      time.sleep(0.5)
 
 db = getDB()
-cache=db.cursos()
+cache=db.cursor()
 cache.execute("SHOW DATABASES")
 rows=cache.fetchall()
 cache.execute("CREATE TABLE IF NOT EXISTS info (data VARCHAR(255) NOT NULL, value INT, UNIQUE (data))")
