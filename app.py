@@ -22,11 +22,11 @@ db = getDB()
 cache=db.cursos()
 cache.execute("SHOW DATABASES")
 rows=cache.fetchall()
-cache.execute("CREARE TABLE IF NOT EXISTS info (data VARCHAR(255) NOT NULL, value INT, UNIQUE (data))")
+cache.execute("CREATE TABLE IF NOT EXISTS info (data VARCHAR(255) NOT NULL, value INT, UNIQUE (data))")
 SQL= "INSERT IGNORE INTO info (data,value) VALUES ('hits',0)"
 
 try:
-    cache.execute(sql)
+    cache.execute(SQL)
     db.commit()
     cache.execute("SELECT value FROM info WHERE data = 'hits'")
     hits= cache.fetchone()[0]
@@ -41,6 +41,8 @@ def get_hit_count():
     try:
       cache.execute("UPDATE info SET value = value+1)
       db.commit()
+      cache.execute("SELECT value FROM info WHERE data = 'hits'")
+      hits = cache.fetchone()[0]
       return hits
     except mysql.connector.Error as err:
             print(err)
